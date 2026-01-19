@@ -9,6 +9,19 @@
     <script src="{% static 'script.js' %}"></script>
 </head>
 <body>
+    <div class="iniciarSesion">
+        {% if user.is_authenticated %}
+            <p>Bienvenido, {{ user.username }}!</p>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer; padding:0;">
+                    Cerrar sesión
+                </button>
+            </form>
+        {% else %}
+            <p><a href="{% url 'login' %}">Iniciar sesión</a></p>
+        {% endif %}
+    </div>
     <h1>Hola mundo</h1>
 </body>
 </html>
