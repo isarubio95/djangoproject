@@ -37,11 +37,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "exampleapp.apps.ExampleappConfig",
     'tailwind',
-    'theme.apps.ThemeConfig',
+    'theme',
     'django_browser_reload',
 ]
 
 TAILWIND_APP_NAME = 'theme'
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 # Esto es necesario para que el refresco automático funcione
 INTERNAL_IPS = [

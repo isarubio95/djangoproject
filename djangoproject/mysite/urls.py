@@ -10,4 +10,5 @@ urlpatterns = [
     path("accounts/signup/", SignUpView.as_view(), name="signup"),
     path('eliminar/<int:actividad_id>/', eliminar_actividad, name='eliminar_actividad'),
     path('editar/<int:actividad_id>/', editar_actividad, name='editar_actividad'),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
