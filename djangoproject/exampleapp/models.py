@@ -22,7 +22,7 @@ class Actividad(models.Model):
     duracion_minutos = models.PositiveIntegerField(help_text="Tiempo en minutos")
     fecha = models.DateTimeField(auto_now_add=True)
     comentarios = models.TextField(blank=True, null=True)
-    calorias_quemadas = models.PositiveIntegerField(help_text="Calorías quemadas durante la actividad")
+    calorias_quemadas = models.PositiveIntegerField(help_text="Calorías quemadas durante la actividad", null=True)
 
     def __str__(self):
         return f"{self.tipo} - {self.usuario.username} ({self.fecha.strftime('%d/%m/%Y')})"

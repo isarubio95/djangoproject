@@ -22,6 +22,7 @@
         <div class="bienvenida">
             <p>Bienvenido, {{ user.username }}!</p>           
         </div>
+
         <h2>Mis Rutinas de Deporte</h2>
         {% if user.actividades.all %}
             <ul>
@@ -36,6 +37,15 @@
         {% else %}
             <p>Aún no has registrado ninguna actividad. ¡Empieza hoy!</p>
         {% endif %}
+        
+        <section class="nueva-actividad">
+            <h3>Registrar nueva rutina</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Guardar actividad</button>
+            </form>
+        </section>
     </main>
 
     <footer>

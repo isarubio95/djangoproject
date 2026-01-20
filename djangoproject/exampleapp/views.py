@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.views import generic
+from .forms import ActividadForm
 
 class SignUpView(generic.CreateView):
     form_class = UserCreationForm
@@ -11,5 +12,13 @@ class SignUpView(generic.CreateView):
 
 @login_required
 def homeView(request):
-    """View function for the home page of ExampleApp."""
-    return render(request, "index.html")
+    if request.method == 'POST':
+        form = ActividadForm(request.POST)
+        if form.is_valid():
+            actividad = form.save(commit=False)
+            actividad.usuario = request.user  # Vinculamos la actividad al usuario actual
+            actividad.save()
+            return redirect('home')
+    else:
+        form = ActividadForm()
+    return render(request, "index.html", {'form': form})
