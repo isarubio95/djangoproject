@@ -15,10 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "dfta+`ñ+ñyv7z$1_82y!7abg68mx0jr)7$$-+s_mfgpd9yz%_=4e!-+çañf+àñ+"
 
@@ -40,6 +36,16 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "exampleapp.apps.ExampleappConfig",
+    'tailwind',
+    'theme.apps.ThemeConfig',
+    'django_browser_reload',
+]
+
+TAILWIND_APP_NAME = 'theme'
+
+# Esto es necesario para que el refresco automático funcione
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 MIDDLEWARE = [
@@ -50,6 +56,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
 ROOT_URLCONF = "mysite.urls"

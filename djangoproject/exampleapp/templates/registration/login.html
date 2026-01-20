@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+
+{% block content %}
 <h2>Iniciar Sesión</h2>
 <form method="post">
     {% csrf_token %}
@@ -9,3 +12,4 @@
     <p style="color: red;">Nombre de usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.</p>
 {% endif %}
 <a href="{% url 'signup' %}">Crear nuevo usuario</a>
+{% endblock %}

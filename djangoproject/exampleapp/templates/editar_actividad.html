@@ -1,36 +1,25 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Actividad - Example App</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
-</head>
-<body>
-    <header>
-        <nav>
-            <a href="{% url 'home' %}">← Volver al inicio</a>
-        </nav>
-    </header>
 
-    <main>
-        <div class="contenedor-edicion">
-            <h2>Editar mi rutina</h2>
-            <p>Estás editando la actividad realizada el: <strong>{{ actividad.fecha|date:"d/m/Y H:i" }}</strong></p>
-            <form method="post">
-                {% csrf_token %}                
-                {{ form.as_p }}
-                <div class="acciones">
-                    <button type="submit" class="btn-guardar">Guardar cambios</button>
-                    <a href="{% url 'home' %}" class="btn-cancelar">Cancelar</a>
-                </div>
-            </form>
-        </div>
-    </main>
+{% block title %}Editar Actividad - Example App{% endblock %}
 
-    <footer>
-        <p>&copy; 2026 Example App. Todos los derechos reservados.</p>
-    </footer>
-</body>
-</html>
+{% block header %}
+    <nav>
+        <a href="{% url 'home' %}">← Volver al inicio</a>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="contenedor-edicion">
+        <h2>Editar mi rutina</h2>
+        <p>Estás editando la actividad realizada el: <strong>{{ actividad.fecha|date:"d/m/Y H:i" }}</strong></p>
+        <form method="post">
+            {% csrf_token %}                
+            {{ form.as_p }}
+            <div class="acciones">
+                <button type="submit" class="btn-guardar">Guardar cambios</button>
+                <a href="{% url 'home' %}" class="btn-cancelar">Cancelar</a>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,77 +1,58 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Example App</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+
+{% block extra_head %}
     <script src="{% static 'script.js' %}"></script>
-</head>
-<body>
-    <header>
-        <form action="{% url 'logout' %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer; padding:0;">
-                Cerrar sesión
-            </button>
-        </form>
-    </header>
+{% endblock %}
 
-    <main>
-        <div class="bienvenida">
-            <p>Bienvenido, {{ user.username }}!</p>           
-        </div>
+{% block content %}
+    <div class="bienvenida">
+        <p>Bienvenido, {{ user.username }}!</p>           
+    </div>
 
-        <h2>Mis Rutinas de Deporte</h2>
-        {% if user.actividades.all %}
-            <table>
-                <thead>
+    <h2>Mis Rutinas de Deporte</h2>
+    {% if user.actividades.all %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo de Actividad</th>
+                    <th>Duración (minutos)</th>
+                    <th>Fecha</th>
+                    <th>Comentarios</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for actividad in user.actividades.all %}
                     <tr>
-                        <th>Tipo de Actividad</th>
-                        <th>Duración (minutos)</th>
-                        <th>Fecha</th>
-                        <th>Comentarios</th>
-                        <th>Acciones</th>
+                        <td>{{ actividad.get_tipo_display }}</td>
+                        <td>{{ actividad.duracion_minutos }}</td>
+                        <td>{{ actividad.fecha|date:"d/m/Y H:i" }}</td>
+                        <td>{{ actividad.comentarios }}</td>
+                        <td>
+                            <a href="{% url 'editar_actividad' actividad.id %}" class="btn-editar">Editar</a>
+                            <form action="{% url 'eliminar_actividad' actividad.id %}" method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" onclick="return confirm('¿Seguro que quieres borrar esta actividad?')" 
+                                        style="color: red; border: none; background: none; cursor: pointer; text-decoration: underline;">
+                                    Eliminar
+                                </button>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for actividad in user.actividades.all %}
-                        <tr>
-                            <td>{{ actividad.get_tipo_display }}</td>
-                            <td>{{ actividad.duracion_minutos }}</td>
-                            <td>{{ actividad.fecha|date:"d/m/Y H:i" }}</td>
-                            <td>{{ actividad.comentarios }}</td>
-                            <td>
-                                <a href="{% url 'editar_actividad' actividad.id %}" class="btn-editar">Editar</a>
-                                <form action="{% url 'eliminar_actividad' actividad.id %}" method="post" style="display:inline;">
-                                    {% csrf_token %}
-                                    <button type="submit" onclick="return confirm('¿Seguro que quieres borrar esta actividad?')" 
-                                            style="color: red; border: none; background: none; cursor: pointer; text-decoration: underline;">
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>Aún no has registrado ninguna actividad. ¡Empieza hoy!</p>
-        {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Aún no has registrado ninguna actividad. ¡Empieza hoy!</p>
+    {% endif %}
 
-        <section class="nueva-actividad">
-            <h3>Registrar nueva rutina</h3>
-            <form method="post">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit">Guardar actividad</button>
-            </form>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Example App. Todos los derechos reservados.</p>
-    </footer>
-</body>
-</html>
+    <section class="nueva-actividad">
+        <h3>Registrar nueva rutina</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Guardar actividad</button>
+        </form>
+    </section>
+{% endblock %}
