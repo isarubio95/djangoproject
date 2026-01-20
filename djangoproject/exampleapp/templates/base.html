@@ -1,33 +1,54 @@
-{% load static %}
+{% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Example App{% endblock %}</title>
+    {% tailwind_css %}
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
-<body>
-    <header>
-        {% block header %}
-            {% if user.is_authenticated %}
-                <form action="{% url 'logout' %}" method="post" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer; padding:0;">
-                        Cerrar sesión
-                    </button>
-                </form>
-            {% endif %}
-        {% endblock %}
+
+<body class="min-h-screen flex flex-col bg-base-200">
+    <header class="navbar bg-base-100 shadow-lg mb-8">
+        <div class="flex-1">
+            <a href="{% url 'home' %}" class="btn btn-ghost text-xl">Example App</a>
+        </div>
+        <div class="flex-none gap-2">
+            {% block header %}
+                {% if user.is_authenticated %}
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar placeholder">
+                            <div class="bg-neutral text-neutral-content rounded-full w-10">
+                                <span class="text-xs">{{ user.username|slice:":2"|upper }}</span>
+                            </div>
+                        </div>
+                        <ul tabindex="0" class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                            <li>
+                                <form action="{% url 'logout' %}" method="post" class="w-full">
+                                    {% csrf_token %}
+                                    <button type="submit" class="w-full text-left">Cerrar sesión</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-sm">Iniciar sesión</a>
+                {% endif %}
+            {% endblock %}
+        </div>
     </header>
 
-    <main>
+    <main class="container mx-auto px-4 flex-grow">
         {% block content %}{% endblock %}
     </main>
 
-    <footer>
-        <p>&copy; 2026 Example App. Todos los derechos reservados.</p>
+    <footer class="footer footer-center p-4 bg-base-300 text-base-content mt-8">
+        <aside>
+            <p>&copy; 2026 Example App. Todos los derechos reservados.</p>
+        </aside>
     </footer>
-</body>
+
+    </body>
 </html>
