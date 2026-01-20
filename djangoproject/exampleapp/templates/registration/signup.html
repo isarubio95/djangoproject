@@ -1,11 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Crear nueva cuenta</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Registrarse</button>
-</form>
-<p>¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
+<div class="hero min-h-[70vh]">
+    <div class="hero-content flex-col lg:flex-row-reverse">
+        <div class="text-center lg:text-left ml-0 lg:ml-10">
+            <h1 class="text-5xl font-bold text-primary">¡Únete ahora!</h1>
+            <p class="py-6 opacity-70 italic text-lg">Lleva un control profesional de tus entrenamientos y mejora tu salud día a día.</p>
+        </div>
+        <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+            <form method="post" class="card-body">
+                <h2 class="text-center text-2xl font-bold mb-4">Crear Cuenta</h2>
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-control">
+                        <label class="label"><span class="label-text">{{ field.label }}</span></label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <div class="form-control mt-6">
+                    <button type="submit" class="btn btn-primary">Registrarse</button>
+                </div>
+                <div class="divider">Ó</div>
+                <p class="text-center text-sm">¿Ya eres parte? <a href="{% url 'login' %}" class="link link-primary font-bold">Inicia sesión</a></p>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

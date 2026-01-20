@@ -1,58 +1,125 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block extra_head %}
-    <script src="{% static 'script.js' %}"></script>
-{% endblock %}
 
 {% block content %}
-    <div class="bienvenida">
-        <p>Bienvenido, {{ user.username }}!</p>           
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-10">
+    <div class="lg:col-span-2">
+        <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
+            <h2 class="text-3xl font-extrabold text-base-content flex items-center gap-3">
+                <span>🏃‍♂️</span>
+                Mis Rutinas
+            </h2>
+            <div class="badge badge-secondary badge-outline font-mono whitespace-nowrap">
+                {{ user.actividades.count }} REGISTROS
+            </div>
+        </div>
+        
+        {% if user.actividades.all %}
+            <div class="overflow-x-auto bg-base-100 rounded-3xl shadow-xl border border-base-300">
+                <table class="table table-zebra w-full">
+                    <thead class="bg-base-200">
+                        <tr class="text-base-content/70">
+                            <th class="py-4">Actividad</th>
+                            <th>Esfuerzo</th>
+                            <th>Fecha y Hora</th>
+                            <th>Comentarios</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for actividad in user.actividades.all %}
+                            <tr class="hover:bg-base-200/50 transition-colors">
+                                <td>
+                                    <div class="font-bold text-primary text-lg">
+                                        {{ actividad.get_tipo_display }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-ghost font-semibold py-3 px-4 italic">
+                                        {{ actividad.duracion_minutos }} min
+                                    </span>
+                                </td>
+                                <td class="text-sm opacity-60 font-medium">
+                                    {{ actividad.fecha|date:"d/m/Y" }}<br>
+                                    <span class="text-xs opacity-40">{{ actividad.fecha|date:"H:i" }}</span>
+                                </td>
+                                <td class="max-w-xs">
+                                    <p class="text-sm truncate opacity-80 italic">
+                                        {{ actividad.comentarios|default:"Sin notas" }}
+                                    </p>
+                                </td>
+                                <td>
+                                    <div class="flex justify-center gap-3">
+                                        <a href="{% url 'editar_actividad' actividad.id %}" 
+                                           class="btn btn-circle btn-sm btn-warning btn-outline hover:shadow-md transition-all" 
+                                           title="Editar rutina">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                            </svg>
+                                        </a>
+                                        <form action="{% url 'eliminar_actividad' actividad.id %}" method="post">
+                                            {% csrf_token %}
+                                            <button type="submit" 
+                                                    class="btn btn-circle btn-sm btn-error btn-outline hover:shadow-md transition-all" 
+                                                    onclick="return confirm('¿Estás seguro de que quieres eliminar esta rutina?')"
+                                                    title="Eliminar rutina">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-neutral shadow-lg rounded-2xl py-8">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-8 h-8"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div class="flex flex-col">
+                    <span class="font-bold text-lg">Todavía no hay entrenamientos.</span>
+                    <span class="text-sm opacity-70">Usa el formulario para registrar tu primera actividad del día.</span>
+                </div>
+            </div>
+        {% endif %}
     </div>
 
-    <h2>Mis Rutinas de Deporte</h2>
-    {% if user.actividades.all %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Tipo de Actividad</th>
-                    <th>Duración (minutos)</th>
-                    <th>Fecha</th>
-                    <th>Comentarios</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for actividad in user.actividades.all %}
-                    <tr>
-                        <td>{{ actividad.get_tipo_display }}</td>
-                        <td>{{ actividad.duracion_minutos }}</td>
-                        <td>{{ actividad.fecha|date:"d/m/Y H:i" }}</td>
-                        <td>{{ actividad.comentarios }}</td>
-                        <td>
-                            <a href="{% url 'editar_actividad' actividad.id %}" class="btn-editar">Editar</a>
-                            <form action="{% url 'eliminar_actividad' actividad.id %}" method="post" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" onclick="return confirm('¿Seguro que quieres borrar esta actividad?')" 
-                                        style="color: red; border: none; background: none; cursor: pointer; text-decoration: underline;">
-                                    Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>Aún no has registrado ninguna actividad. ¡Empieza hoy!</p>
-    {% endif %}
-
-    <section class="nueva-actividad">
-        <h3>Registrar nueva rutina</h3>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Guardar actividad</button>
-        </form>
-    </section>
+    <div class="relative">
+        <div class="card bg-base-100 shadow-2xl border border-primary/10 sticky top-8">
+            <div class="card-body">
+                <h3 class="card-title text-primary text-2xl flex items-center justify-between">
+                    Nueva Rutina
+                    <span class="badge badge-xs badge-primary animate-pulse"></span>
+                </h3>
+                <p class="text-sm opacity-50 mb-4">Introduce los detalles de tu sesión de hoy.</p>
+                
+                <form method="post" class="space-y-5">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-control w-full">
+                            <label class="label pt-0">
+                                <span class="label-text font-bold text-base-content/70">{{ field.label }}</span>
+                            </label>
+                            
+                            {{ field }}
+                            
+                            {% if field.errors %}
+                                <label class="label">
+                                    <span class="label-text-alt text-error font-medium">{{ field.errors.0 }}</span>
+                                </label>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    
+                    <div class="card-actions mt-6">
+                        <button type="submit" class="btn btn-primary btn-block shadow-lg hover:scale-[1.02] transition-transform">
+                            Guardar Entrenamiento
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

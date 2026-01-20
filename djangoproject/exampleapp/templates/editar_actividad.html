@@ -1,25 +1,31 @@
 {% extends 'base.html' %}
-{% load static %}
 
-{% block title %}Editar Actividad - Example App{% endblock %}
-
-{% block header %}
-    <nav>
-        <a href="{% url 'home' %}">← Volver al inicio</a>
-    </nav>
-{% endblock %}
+{% block title %}Editar Actividad{% endblock %}
 
 {% block content %}
-    <div class="contenedor-edicion">
-        <h2>Editar mi rutina</h2>
-        <p>Estás editando la actividad realizada el: <strong>{{ actividad.fecha|date:"d/m/Y H:i" }}</strong></p>
-        <form method="post">
-            {% csrf_token %}                
-            {{ form.as_p }}
-            <div class="acciones">
-                <button type="submit" class="btn-guardar">Guardar cambios</button>
-                <a href="{% url 'home' %}" class="btn-cancelar">Cancelar</a>
+<div class="flex justify-center items-center py-10">
+    <div class="card w-full max-w-lg bg-base-100 shadow-xl border border-warning/30">
+        <div class="card-body">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="card-title text-warning text-2xl">Modificar Rutina</h2>
+                <div class="badge badge-outline opacity-50">{{ actividad.fecha|date:"d/m/Y" }}</div>
             </div>
-        </form>
+
+            <form method="post" class="space-y-4">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-control">
+                        <label class="label"><span class="label-text font-bold text-base-content/70">{{ field.label }}</span></label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+
+                <div class="card-actions justify-end mt-6">
+                    <a href="{% url 'home' %}" class="btn btn-ghost">Cancelar</a>
+                    <button type="submit" class="btn btn-warning px-8 text-white">Actualizar</button>
+                </div>
+            </form>
+        </div>
     </div>
+</div>
 {% endblock %}

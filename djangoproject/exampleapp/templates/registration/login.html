@@ -1,15 +1,55 @@
 {% extends 'base.html' %}
 
+{% block title %}Iniciar Sesión - Example App{% endblock %}
+
 {% block content %}
-<h2>Iniciar Sesión</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Entrar</button>
-</form>
-<p><a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a></p>
-{% if form.errors %}
-    <p style="color: red;">Nombre de usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.</p>
-{% endif %}
-<a href="{% url 'signup' %}">Crear nuevo usuario</a>
+<div class="hero min-h-[70vh] flex items-center justify-center">
+    <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100 border border-primary/10">
+        <form method="post" class="card-body">
+            <h2 class="text-center text-3xl font-extrabold text-primary mb-6">Bienvenido</h2>
+            
+            {% csrf_token %}
+            
+            {% if form.non_field_errors %}
+                <div class="alert alert-error shadow-sm mb-4 py-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-5 w-5" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <span class="text-sm">Credenciales incorrectas.</span>
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-control w-full">
+                    <label class="label pt-0">
+                        <span class="label-text font-bold text-base-content/70">{{ field.label }}</span>
+                    </label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <label class="label p-0">
+                            <span class="label-text-alt text-error font-medium">{{ field.errors.0 }}</span>
+                        </label>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="flex mt-2">
+                <a href="{% url 'password_reset' %}" class="label-text-alt link link-hover text-primary opacity-70">
+                    ¿Olvidaste tu contraseña?
+                </a>
+            </div>
+
+            <div class="form-control mt-8">
+                <button type="submit" class="btn btn-primary shadow-lg hover:scale-[1.02] transition-transform">
+                    Entrar
+                </button>
+            </div>
+
+            <div class="divider text-xs opacity-50">O BIEN</div>
+
+            <div class="text-center">
+                <span class="text-sm opacity-60">¿No tienes cuenta?</span>
+                <a href="{% url 'signup' %}" class="link link-primary font-bold ml-1">Regístrate</a>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

@@ -28,12 +28,10 @@ def editar_actividad(request, actividad_id):
 
 @login_required
 def eliminar_actividad(request, actividad_id):
-    # Buscamos la actividad o devolvemos error 404 si no existe
     actividad = get_object_or_404(Actividad, id=actividad_id, usuario=request.user)
     if request.method == 'POST':
         actividad.delete()
         return redirect('home')
-    # Si se accede por GET (opcional), podrías mostrar una página de confirmación
     return render(request, "confirmar_borrado.html", {'actividad': actividad})
 
 @login_required
