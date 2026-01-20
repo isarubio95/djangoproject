@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 class Actividad(models.Model):
     # Tipos de rutinas predefinidos
@@ -20,7 +21,7 @@ class Actividad(models.Model):
         default='CARDIO'
     )
     duracion_minutos = models.PositiveIntegerField(help_text="Tiempo en minutos")
-    fecha = models.DateTimeField(auto_now_add=True)
+    fecha = models.DateTimeField(default=timezone.now)
     comentarios = models.TextField(blank=True, null=True)
     calorias_quemadas = models.PositiveIntegerField(help_text="Calorías quemadas durante la actividad", null=True)
 
