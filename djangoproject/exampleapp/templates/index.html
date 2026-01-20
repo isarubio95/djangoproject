@@ -15,7 +15,7 @@
             <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer; padding:0;">
                 Cerrar sesión
             </button>
-        </form>    
+        </form>
     </header>
 
     <main>
@@ -41,6 +41,9 @@
                                 Eliminar
                             </button>
                         </form>
+                        <a href="{% url 'editar_actividad' actividad.id %}" class="btn-editar">
+                            Editar
+                        </a>
                     </li>
                 {% endfor %}
             </ul>

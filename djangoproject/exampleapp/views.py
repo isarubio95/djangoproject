@@ -12,6 +12,21 @@ class SignUpView(generic.CreateView):
     template_name = "registration/signup.html"
 
 @login_required
+def editar_actividad(request, actividad_id):
+    actividad = get_object_or_404(Actividad, id=actividad_id, usuario=request.user)
+    if request.method == 'POST':
+        form = ActividadForm(request.POST, instance=actividad)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = ActividadForm(instance=actividad)
+    return render(request, 'editar_actividad.html', {
+        'form': form,
+        'actividad': actividad
+    })
+
+@login_required
 def eliminar_actividad(request, actividad_id):
     # Buscamos la actividad o devolvemos error 404 si no existe
     actividad = get_object_or_404(Actividad, id=actividad_id, usuario=request.user)
