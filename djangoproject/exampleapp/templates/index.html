@@ -9,14 +9,37 @@
     <script src="{% static 'script.js' %}"></script>
 </head>
 <body>
-    <div class="iniciarSesion">
-        <p>Bienvenido, {{ user.username }}!</p>
+    <header>
         <form action="{% url 'logout' %}" method="post" style="display:inline;">
             {% csrf_token %}
             <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer; padding:0;">
                 Cerrar sesión
             </button>
-        </form>
-    </div>
+        </form>    
+    </header>
+
+    <main>
+        <div class="bienvenida">
+            <p>Bienvenido, {{ user.username }}!</p>           
+        </div>
+        <h2>Mis Rutinas de Deporte</h2>
+        {% if user.actividades.all %}
+            <ul>
+                {% for actividad in user.actividades.all %}
+                    <li>
+                        <strong>{{ actividad.get_tipo_display }}</strong>: 
+                        {{ actividad.duracion_minutos }} minutos 
+                        (Realizada el {{ actividad.fecha|date:"d/m/Y" }})
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aún no has registrado ninguna actividad. ¡Empieza hoy!</p>
+        {% endif %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Example App. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>
