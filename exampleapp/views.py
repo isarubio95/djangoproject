@@ -1,3 +1,4 @@
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -8,8 +9,13 @@ from django.http import JsonResponse
 
 class SignUpView(generic.CreateView):
     form_class = DaisySignupForm
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("home")
     template_name = "registration/signup.html"
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        login(self.request, self.object)
+        return response
 
 @login_required
 def editar_actividad(request, actividad_id):
