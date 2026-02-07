@@ -24,7 +24,7 @@
                     <h3 class="text-sm font-bold mb-2">Ejercicios en esta sesión:</h3>
                     <ul class="text-xs space-y-1">
                         {% for ejercicio in actividad.ejercicios.all %}
-                            <li>• {{ ejercicio.tipo_ejercicio.nombre }}: {{ ejercicio.series }}x{{ ejercicio.repeticiones }} ({{ ejercicio.peso_kg }}kg)</li>
+                            <li>• {{ ejercicio.tipo_ejercicio.nombre }}: {{ ejercicio.repeticiones }} reps ({{ ejercicio.peso_kg }}kg)</li>
                         {% empty %}
                             <li class="opacity-50 italic">Sin ejercicios registrados</li>
                         {% endfor %}

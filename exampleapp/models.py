@@ -43,9 +43,8 @@ class Ejercicio(models.Model):
         on_delete=models.PROTECT, 
         verbose_name="Ejercicio"
     )
-    series = models.PositiveIntegerField()
     repeticiones = models.PositiveIntegerField()
     peso_kg = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f"{self.tipo_ejercicio.nombre} ({self.series}x{self.repeticiones})"
+        return f"{self.tipo_ejercicio.nombre} - {self.repeticiones} reps ({self.peso_kg}kg)"
