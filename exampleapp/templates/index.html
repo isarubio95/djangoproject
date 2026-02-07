@@ -4,9 +4,49 @@
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <style>
+    /* Botones de FullCalendar */
     .fc .fc-button-primary { @apply btn btn-sm btn-primary; }
-    .fc-toolbar-title { @apply text-lg font-bold display: block; width: 100%; text-align: center; }
-    @media (max-width: 640px) { .fc .fc-today-button {display: none !important;} }
+    
+    /* Centrado del título de FullCalendar */
+    .fc-toolbar-title { 
+        @apply text-lg font-bold block w-full text-center; 
+    }
+
+    /* Ocultar Today en móviles */
+    @media (max-width: 640px) { 
+        .fc .fc-today-button { @apply hidden; } 
+    }
+
+    /* Animación suave de apertura para la modal */
+    dialog[open] {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    dialog#edit_modal {
+        display: none; /* Oculta por defecto */
+        background: transparent; /* Fondo transparente (lo manejamos con Tailwind) */
+        padding: 0;
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        max-width: 100vw;
+        max-height: 100vh;
+        position: fixed;
+        inset: 0;
+    }
+
+    /* 2. Cuando está abierta, activamos el Grid Centrado */
+    dialog#edit_modal[open] {
+        display: grid !important;
+        place-items: center !important;
+        animation: fadeIn 0.2s ease-out;
+    }
+
+    /* Animación simple */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
 </style>
 {% endblock %}
 
@@ -140,12 +180,13 @@
 </div>
 
 <!-- Modal de Edición -->
-<dialog id="edit_modal" class="modal">
-    <div class="modal-box w-11/12 max-w-2xl bg-base-200 p-0 overflow-hidden">
-        <!-- El contenido se cargará aquí vía AJAX -->
-        <div id="edit_modal_content"></div>
+<dialog id="edit_modal" 
+        class="z-50 bg-black/60 backdrop-blur-sm"
+        onclick="if(event.target === this) this.close()">
+    <div class="bg-base-100 w-11/12 max-w-2xl rounded-2xl shadow-2xl relative flex flex-col max-h-[90vh]">   
+        <div id="edit_modal_content" class="overflow-y-auto p-0 w-full">
+            </div>
     </div>
-    <form method="dialog" class="modal-backdrop"><button>close</button></form>
 </dialog>
 
 <script>
