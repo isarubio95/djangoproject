@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 from .forms import ActividadForm, DaisySignupForm, EjercicioFormSet
-from .models import Actividad
+from .models import Actividad, Serie
 from django.http import JsonResponse
 
 class SignUpView(generic.CreateView):
@@ -57,8 +57,31 @@ def homeView(request):
             actividad = form.save(commit=False)
             actividad.usuario = request.user  # Vinculamos la actividad al usuario actual
             actividad.save()
-            formset.instance = actividad
-            formset.save()
+            
+            # Guardamos los ejercicios y procesamos las series manualmente
+            for form_ej in formset:
+                if form_ej.is_valid() and form_ej.cleaned_data and not form_ej.cleaned_data.get('DELETE'):
+                    ejercicio = form_ej.save(commit=False)
+                    ejercicio.actividad = actividad
+                    ejercicio.save()
+
+                    # Procesar series desde request.POST usando el prefijo del form
+                    prefix = form_ej.prefix
+                    i = 0
+                    while True:
+                        reps_key = f'{prefix}-series-{i}-repeticiones'
+                        peso_key = f'{prefix}-series-{i}-peso_kg'
+                        if reps_key in request.POST and peso_key in request.POST:
+                            Serie.objects.create(
+                                ejercicio=ejercicio,
+                                numero_serie=i+1,
+                                repeticiones=request.POST[reps_key],
+                                peso_kg=request.POST[peso_key]
+                            )
+                            i += 1
+                        else:
+                            break
+            
             return redirect('home')
     else:
         form = ActividadForm()

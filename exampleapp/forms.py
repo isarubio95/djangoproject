@@ -16,11 +16,9 @@ class ActividadForm(forms.ModelForm):
 class EjercicioForm(forms.ModelForm):
     class Meta:
         model = Ejercicio
-        fields = ['tipo_ejercicio', 'repeticiones', 'peso_kg']
+        fields = ['tipo_ejercicio']
         widgets = {
             'tipo_ejercicio': forms.Select(attrs={'class': 'select select-bordered w-full'}),
-            'repeticiones': forms.NumberInput(attrs={'class': 'input input-bordered w-full'}),
-            'peso_kg': forms.NumberInput(attrs={'class': 'input input-bordered w-full'}),
         }
 
 EjercicioFormSet = inlineformset_factory(

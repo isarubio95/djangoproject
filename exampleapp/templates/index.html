@@ -145,14 +145,35 @@
                     {{ formset.management_form }}
                     <div id="ejercicios-container" class="space-y-4">
                         {% for ej_form in formset %}
-                            <div class="ejercicio-row p-4 bg-base-200 rounded-xl border border-base-300 space-y-2">
+                            <div class="ejercicio-row p-4 bg-base-200 rounded-xl border border-base-300 space-y-2" x-data="{ numSeries: 1 }">
                                 {% for hidden in ej_form.hidden_fields %}{{ hidden }}{% endfor %}
-                                {% for field in ej_form.visible_fields %}
-                                    <div class="form-control">
-                                        <label class="label py-0"><span class="label-text text-[10px] font-bold">{{ field.label }}</span></label>
-                                        {{ field }}
-                                    </div>
-                                {% endfor %}
+                                
+                                <div class="form-control">
+                                    <label class="label py-0"><span class="label-text text-[10px] font-bold">Ejercicio</span></label>
+                                    {{ ej_form.tipo_ejercicio }}
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label py-0"><span class="label-text text-[10px] font-bold">Series</span></label>
+                                    <select x-model.number="numSeries" class="select select-bordered select-sm w-full">
+                                        <option value="1">1 Serie</option>
+                                        <option value="2">2 Series</option>
+                                        <option value="3">3 Series</option>
+                                        <option value="4">4 Series</option>
+                                        <option value="5">5 Series</option>
+                                        <option value="6">6 Series</option>
+                                    </select>
+                                </div>
+
+                                <div class="space-y-2 mt-2">
+                                    <template x-for="i in numSeries" :key="i">
+                                        <div class="flex gap-2 items-end">
+                                            <span class="text-xs font-bold w-12 pt-3 opacity-60" x-text="'Serie ' + i + ':'"></span>
+                                            <input type="number" :name="'{{ ej_form.prefix }}-series-' + (i-1) + '-repeticiones'" class="input input-bordered input-sm w-full" placeholder="Reps" required>
+                                            <input type="number" step="0.5" :name="'{{ ej_form.prefix }}-series-' + (i-1) + '-peso_kg'" class="input input-bordered input-sm w-full" placeholder="Kg" required>
+                                        </div>
+                                    </template>
+                                </div>
                             </div>
                         {% endfor %}
                     </div>
@@ -161,14 +182,35 @@
 
                     <!-- Template oculto para nuevos ejercicios -->
                     <div id="empty-form-template" class="hidden">
-                        <div class="ejercicio-row p-4 bg-base-200 rounded-xl border border-base-300 space-y-2">
+                        <div class="ejercicio-row p-4 bg-base-200 rounded-xl border border-base-300 space-y-2" x-data="{ numSeries: 1 }">
                             {% for hidden in formset.empty_form.hidden_fields %}{{ hidden }}{% endfor %}
-                            {% for field in formset.empty_form.visible_fields %}
-                                <div class="form-control">
-                                    <label class="label py-0"><span class="label-text text-[10px] font-bold">{{ field.label }}</span></label>
-                                    {{ field }}
-                                </div>
-                            {% endfor %}
+                            
+                            <div class="form-control">
+                                <label class="label py-0"><span class="label-text text-[10px] font-bold">Ejercicio</span></label>
+                                {{ formset.empty_form.tipo_ejercicio }}
+                            </div>
+
+                            <div class="form-control">
+                                <label class="label py-0"><span class="label-text text-[10px] font-bold">Series</span></label>
+                                <select x-model.number="numSeries" class="select select-bordered select-sm w-full">
+                                    <option value="1">1 Serie</option>
+                                    <option value="2">2 Series</option>
+                                    <option value="3">3 Series</option>
+                                    <option value="4">4 Series</option>
+                                    <option value="5">5 Series</option>
+                                    <option value="6">6 Series</option>
+                                </select>
+                            </div>
+
+                            <div class="space-y-2 mt-2">
+                                <template x-for="i in numSeries" :key="i">
+                                    <div class="flex gap-2 items-end">
+                                        <span class="text-xs font-bold w-12 pt-3 opacity-60" x-text="'Serie ' + i + ':'"></span>
+                                        <input type="number" :name="'__prefix__-series-' + (i-1) + '-repeticiones'" class="input input-bordered input-sm w-full" placeholder="Reps" required>
+                                        <input type="number" step="0.5" :name="'__prefix__-series-' + (i-1) + '-peso_kg'" class="input input-bordered input-sm w-full" placeholder="Kg" required>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
                     </div>
 

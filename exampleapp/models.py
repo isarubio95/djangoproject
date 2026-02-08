@@ -43,8 +43,15 @@ class Ejercicio(models.Model):
         on_delete=models.PROTECT, 
         verbose_name="Ejercicio"
     )
+
+    def __str__(self):
+        return f"{self.tipo_ejercicio.nombre}"
+
+class Serie(models.Model):
+    ejercicio = models.ForeignKey(Ejercicio, on_delete=models.CASCADE, related_name="series")
+    numero_serie = models.PositiveIntegerField()
     repeticiones = models.PositiveIntegerField()
     peso_kg = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f"{self.tipo_ejercicio.nombre} - {self.repeticiones} reps ({self.peso_kg}kg)"
+        return f"Serie {self.numero_serie}: {self.repeticiones}x{self.peso_kg}"
